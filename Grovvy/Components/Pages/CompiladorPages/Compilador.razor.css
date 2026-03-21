@@ -162,9 +162,12 @@ textarea {
     font-size: 14px;
     resize: none;
     outline: none;
-    line-height: 21px; 
+    line-height: 21px;
     overflow-y: auto;
     height: 100%;
+
+    white-space: pre; 
+    overflow-x: auto;
 }
 
 /* ================= TERMINAL ================= */
@@ -244,5 +247,37 @@ textarea {
     .editor-pane {
         border-right: none;
         border-bottom: 1px solid var(--border-color);
+    }
+}
+
+
+/* --- ESTILOS DE LA BARRA DE SCROLL --- */
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #3b3b3b #151515; 
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--pane-bg); 
+    border-left: 1px solid var(--border-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3b3b3b;
+    border-radius: 6px;
+    border: 3px solid var(--pane-bg);
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    ::-webkit-scrollbar-corner {
+        background: var(--pane-bg);
     }
 }
