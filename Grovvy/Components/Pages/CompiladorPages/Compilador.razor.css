@@ -1,0 +1,248 @@
+﻿html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+:root {
+    --bg-dark: #0d0d0d;
+    --pane-bg: #151515;
+    --accent: #00ff88;
+    --error: #ff4757;
+    --text-muted: #666;
+    --border-color: #252525;
+    --header-height: 60px;
+}
+
+/* ================= WRAPPER GENERAL ================= */
+
+.ide-wrapper {
+    background-color: var(--bg-dark);
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+}
+
+/* ================= HEADER ================= */
+
+.ide-header {
+    height: var(--header-height);
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-color);
+    background: #0a0a0a;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .brand h1 {
+        font-size: 1.2rem;
+        margin: 0;
+        font-weight: 700;
+        color: #fff;
+    }
+
+    .brand span {
+        color: var(--accent);
+    }
+
+.pulse-icon {
+    color: var(--accent);
+    filter: drop-shadow(0 0 5px var(--accent));
+}
+
+/* ================= BOTONES ================= */
+
+.btn-run {
+    background: rgba(0, 255, 136, 0.1);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 5px 20px;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+    .btn-run:hover {
+        background: var(--accent);
+        box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+    }
+
+.btn-clear {
+    color: var(--text-muted);
+    border: none;
+    background: transparent;
+    font-size: 1.2rem;
+}
+
+    .btn-clear:hover {
+        color: var(--error);
+        box-shadow: 0 0 15px #ff0000;
+    }
+
+/* ================= LAYOUT PRINCIPAL ================= */
+
+.ide-container {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+/* ================= CABECERAS DE PANEL ================= */
+
+.pane-header {
+    background: #0c0c0c;
+    padding: 8px 15px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ================= EDITOR ================= */
+
+.editor-pane {
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.editor-wrapper {
+    display: flex;
+    flex-grow: 1;
+    background: #1a1a1a;
+    overflow: hidden;
+    min-height: 0;
+    max-height: 500px;
+}
+
+/* -------- NUMEROS DE LINEA -------- */
+
+.line-numbers {
+    padding: 1rem 0.5rem;
+    background: #151515;
+    color: #3b3b3b;
+    text-align: right;
+    min-width: 50px;
+    user-select: none;
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    border-right: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+}
+
+    .line-numbers label {
+        display: block;
+        height: 21px;
+    }
+
+/* -------- TEXTAREA -------- */
+
+textarea {
+    flex-grow: 1;
+    background: transparent;
+    border: none;
+    color: #d4d4d4;
+    padding: 1rem;
+    font-family: 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 14px;
+    resize: none;
+    outline: none;
+    line-height: 21px; 
+    overflow-y: auto;
+    height: 100%;
+}
+
+/* ================= TERMINAL ================= */
+
+.terminal-pane {
+    display: flex;
+    flex-direction: column;
+    background: #0c0c0c;
+    min-height: 0;
+    max-height: 535px;
+}
+
+.terminal-body {
+    padding: 1rem;
+    font-family: 'Consolas', monospace;
+    font-size: 13px;
+    flex-grow: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+    .terminal-body.success {
+        color: #a2f1a2;
+    }
+
+    .terminal-body.error {
+        color: var(--error);
+    }
+
+.btn-terminal-clear {
+    background: transparent;
+    border: 1px solid #333;
+    color: #666;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+    .btn-terminal-clear:hover {
+        border-color: var(--text-muted);
+        color: #eee;
+    }
+
+.placeholder-text {
+    color: #444;
+}
+
+    .placeholder-text .char {
+        color: var(--accent);
+    }
+
+/* ================= ERROR TERMINAL ================= */
+
+.error-terminal {
+    background-color: rgba(255, 85, 85, 0.1);
+    border-left: 4px solid #ff5555;
+    color: #ff8080;
+    padding: 12px 16px;
+    margin: 10px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 992px) {
+    .ide-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 200px;
+    }
+
+    .editor-pane {
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+}

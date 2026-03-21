@@ -1,0 +1,146 @@
+﻿@page "/Compilador"
+
+@inject IJSRuntime JSRuntime
+@inject IJSRuntime JS
+@rendermode InteractiveServer
+
+<div class="ide-wrapper">
+    <header class="ide-header mb-2 ">
+        <div class="brand">
+            <i class="bi bi-cpu-fill pulse-icon"> </i>
+            <h1> Groovy<span> Compiler</span> </h1>
+        </div>
+        <div class="actions">
+            <br />
+            <button class="btn btn-run me-2" @onclick="Compilar">
+                <i class="bi bi-play-fill"> </i> Ejecutar
+            </button>
+            <button class="btn btn-clear" @onclick="LimpiarTodo">
+                <i class="bi bi-trash3"> </i>
+            </button>
+        </div>
+    </header>
+
+    <main class="ide-container">
+        <section class="editor-pane">
+            <div class="pane-header">
+                <span> <i class="bi bi-file-earmark-code"> </i> main.groovy</span>
+            </div>
+            <div class="editor-wrapper">
+                <div class="line-numbers">
+                    <div style="@ScrollStyle">
+                        @for (int i = 1; i <= TotalLineas; i++)
+                        {
+                            @i
+                            <br />
+                        }
+                    </div>
+                </div>
+                <textarea id="acaparador"
+                          @ref="textareaRef" 
+                          @bind="textoCodigo" 
+                          @bind:event="oninput" 
+                          @onscroll="SincronizarScroll" 
+                          placeholder="// Escribe tu código Groovy aquí..."
+                          spellcheck="false">
+                 </textarea>
+            </div>
+        </section>
+        <section class="terminal-pane">
+            <div class="pane-header justify-content-between">
+                <span> <i class="bi bi-terminal"> </i> Terminal de Salida</span>
+                @if (hayErrores)
+                {
+                    <i class="bi bi-x"> </i>
+
+                }
+                else
+                {
+                    <i class="bi bi-check"> </i>
+                }
+                <button class="btn-terminal-clear" @onclick="LimpiarConsola"> Limpiar</button>
+            </div>
+            <div class="terminal-body">
+                @if (string.IsNullOrEmpty(salidaConsola))
+                {
+                    <div class="placeholder-text"> <span class="char">></span> Esperando instrucciones... </div>
+                }
+
+                else
+                {
+                    if (hayErrores)
+                    {
+                        <div class="error-terminal">
+                            <pre><code>@salidaConsola</code></pre>
+                        </div>
+                    }
+                    else
+                    {
+                        <pre><code>@salidaConsola</code></pre>
+                    }
+                }
+            </div>
+        </section>
+
+    </main>
+    <div class="text-end mt-3 alert alert-link">
+        by Romanny & Lohammy
+    </div>
+</div>
+
+@code {
+    //Lógica visual
+    private int TotalLineas =>
+    string.IsNullOrEmpty(textoCodigo)
+    ? 1
+    : textoCodigo.Split('\n').Length;
+    private double scrollTop;
+    private string ScrollStyle => $"transform: translateY(-{scrollTop}px);";
+    private ElementReference textareaRef; 
+    private ElementReference lineNumbersRef;
+    //Lógica visual
+
+    private string textoCodigo = "";
+    private string salidaConsola = "";
+    private bool hayErrores { get; set; } = false;
+
+    //Esta función sincroniza los scrolls del textarea y números, para representar gráficamente las líneas y sus números
+    private async Task SincronizarScroll()
+    {
+        scrollTop = await JS.InvokeAsync<double>("getScrollTop", textareaRef);
+    }
+
+    /*Aquí someteremos el codigo a todos las pruebas (Sintáctica, léxica, etc)
+    Creemos clases services separados para cada punto para que no tengamos conflicto a la hora de trabajar juntos. */
+    private async Task Compilar()
+    {
+        hayErrores = false;
+
+        if (string.IsNullOrWhiteSpace(textoCodigo))
+        {
+            hayErrores = true;
+            salidaConsola = "[ERROR] El editor está vacío. Nada que procesar.";
+            return;
+        }
+
+
+        salidaConsola = "Compilando...";
+        await Task.Delay(600);
+
+        salidaConsola = $"> Groovy 4.0.0\n> Proceso finalizado con éxito.\n> Salida: {DateTime.Now:HH:mm:ss} - Compilación correcta.";
+    }
+
+    private void LimpiarTodo()
+    {
+        hayErrores = false;
+
+        textoCodigo = string.Empty;
+        salidaConsola = string.Empty;
+    }
+
+    private void LimpiarConsola()
+    {
+        hayErrores = false;
+        salidaConsola = string.Empty;
+    }
+}
