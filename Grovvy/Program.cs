@@ -1,4 +1,5 @@
 using Grovvy.Components;
+using Grovvy.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddBlazorBootstrap();
+builder.Services.AddScoped<SintaxisService>();
+builder.Services.AddScoped<LexicoService>();
+builder.Services.AddScoped<SemanticoService>();
 
 var app = builder.Build();
 

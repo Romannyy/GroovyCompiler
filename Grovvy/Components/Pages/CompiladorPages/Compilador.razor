@@ -2,6 +2,11 @@
 
 @inject IJSRuntime JSRuntime
 @inject IJSRuntime JS
+@inject SintaxisService sintaxisService
+@inject LexicoService lexicoService
+@inject SemanticoService semanticoService
+
+
 @rendermode InteractiveServer
 
 <div class="ide-wrapper">
@@ -37,10 +42,10 @@
                     </div>
                 </div>
                 <textarea id="acaparador"
-                          @ref="textareaRef" 
-                          @bind="textoCodigo" 
-                          @bind:event="oninput" 
-                          @onscroll="SincronizarScroll" 
+                          @ref="textareaRef"
+                          @bind="textoCodigo"
+                          @bind:event="oninput"
+                          @onscroll="SincronizarScroll"
                           placeholder="// Escribe tu código Groovy aquí..."
                           spellcheck="false">
                  </textarea>
@@ -96,13 +101,15 @@
     : textoCodigo.Split('\n').Length;
     private double scrollTop;
     private string ScrollStyle => $"transform: translateY(-{scrollTop}px);";
-    private ElementReference textareaRef; 
+    private ElementReference textareaRef;
     private ElementReference lineNumbersRef;
     //Lógica visual
+
 
     private string textoCodigo = "";
     private string salidaConsola = "";
     private bool hayErrores { get; set; } = false;
+
 
     //Esta función sincroniza los scrolls del textarea y números, para representar gráficamente las líneas y sus números
     private async Task SincronizarScroll()
@@ -127,7 +134,34 @@
         salidaConsola = "Compilando...";
         await Task.Delay(600);
 
+        var (tokens, erroresLexicos) = lexicoService.AnalizarCodigo(textoCodigo);
+
+        if (erroresLexicos.Count > 0)
+        {
+            hayErrores = true;
+            salidaConsola = string.Join("\n", erroresLexicos);
+            return;
+        }
+
+        var erroresSintacticos = sintaxisService.AnalizarTokens(tokens);
+
+        if (erroresSintacticos.Count > 0)
+        {
+            hayErrores = true;
+            salidaConsola = string.Join("\n", erroresSintacticos);
+            return;
+        }
+
         salidaConsola = $"> Groovy 4.0.0\n> Proceso finalizado con éxito.\n> Salida: {DateTime.Now:HH:mm:ss} - Compilación correcta.";
+
+        var erroresSemanticos = semanticoService.AnalizarSemantica(tokens);
+
+        if (erroresSemanticos.Count > 0)
+        {
+            hayErrores = true;
+            salidaConsola = string.Join("\n", erroresSemanticos);
+            return;
+        }
     }
 
     private void LimpiarTodo()
