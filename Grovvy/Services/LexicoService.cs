@@ -23,22 +23,18 @@ public class LexicoService
         {
             char actual = codigo[i];
 
-            // 1. Saltos de línea y espacios
             if (actual == '\n') { linea++; i++; continue; }
             if (char.IsWhiteSpace(actual)) { i++; continue; }
 
-            // 2. Comentarios (De línea y de bloque) y División
             if (actual == '/')
             {
                 if (i + 1 < codigo.Length && codigo[i + 1] == '/')
                 {
-                    // Comentario de línea: ignorar hasta el salto de línea
                     while (i < codigo.Length && codigo[i] != '\n') i++;
                     continue;
                 }
                 else if (i + 1 < codigo.Length && codigo[i + 1] == '*')
                 {
-                    // Comentario de bloque
                     i += 2;
                     bool cerrado = false;
                     while (i < codigo.Length - 1)
@@ -57,7 +53,6 @@ public class LexicoService
                 }
             }
 
-            // 3. Identificadores y Palabras Reservadas
             if (char.IsLetter(actual) || actual == '_')
             {
                 var sb = new StringBuilder();
@@ -76,7 +71,6 @@ public class LexicoService
                 continue;
             }
 
-            // 4. Números (Enteros y Decimales)
             if (char.IsDigit(actual))
             {
                 var sb = new StringBuilder();

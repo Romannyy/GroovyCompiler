@@ -9,6 +9,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddBlazorBootstrap();
 builder.Services.AddScoped<SintaxisService>();
 builder.Services.AddScoped<LexicoService>();
+builder.Services.AddScoped<SemanticoService>();
 
 var app = builder.Build();
 

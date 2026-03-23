@@ -4,6 +4,8 @@
 @inject IJSRuntime JS
 @inject SintaxisService sintaxisService
 @inject LexicoService lexicoService
+@inject SemanticoService semanticoService
+
 
 @rendermode InteractiveServer
 
@@ -40,10 +42,10 @@
                     </div>
                 </div>
                 <textarea id="acaparador"
-                          @ref="textareaRef" 
-                          @bind="textoCodigo" 
-                          @bind:event="oninput" 
-                          @onscroll="SincronizarScroll" 
+                          @ref="textareaRef"
+                          @bind="textoCodigo"
+                          @bind:event="oninput"
+                          @onscroll="SincronizarScroll"
                           placeholder="// Escribe tu código Groovy aquí..."
                           spellcheck="false">
                  </textarea>
@@ -99,7 +101,7 @@
     : textoCodigo.Split('\n').Length;
     private double scrollTop;
     private string ScrollStyle => $"transform: translateY(-{scrollTop}px);";
-    private ElementReference textareaRef; 
+    private ElementReference textareaRef;
     private ElementReference lineNumbersRef;
     //Lógica visual
 
@@ -151,6 +153,15 @@
         }
 
         salidaConsola = $"> Groovy 4.0.0\n> Proceso finalizado con éxito.\n> Salida: {DateTime.Now:HH:mm:ss} - Compilación correcta.";
+
+        var erroresSemanticos = semanticoService.AnalizarSemantica(tokens);
+
+        if (erroresSemanticos.Count > 0)
+        {
+            hayErrores = true;
+            salidaConsola = string.Join("\n", erroresSemanticos);
+            return;
+        }
     }
 
     private void LimpiarTodo()
